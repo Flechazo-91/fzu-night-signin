@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   注册 Windows 计划任务：每天 21:30 自动跑 fzu-signin run
 
