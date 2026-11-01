@@ -1,0 +1,47 @@
+#!/bin/sh
+# 提交前守门：把"绝不该进公开仓库"的东西挡在门外
+#
+# 为什么要有它：.gitignore 只挡**未跟踪**的文件 ✗，一次 `git add -A` 或 `git add -f`
+# 就能把 cookie / 配置 / 日志推上 GitHub，而且**删了也会留在历史里** ✗✗
+#
+# 启用方式（随仓库走，clone 后跑一次即可）：
+#   git config core.hooksPath .githooks
+#
+# ⚠️ 模式要锚到扩展名/结尾，别写成宽泛前缀 —— 否则会把源码也拦掉。
+
+staged=$(git diff --cached --name-only)
+
+# ① 文件名本身就不许进（放过 *.example.*）
+bad_names=$(printf '%s\n' "$staged" \
+  | grep -Ei '(^|/)(cookiejar|my-cookies|credentials|config)\.json$|(^|/)Cookies\.db$|(^|/)\.env(\.|$)|(^|/)logs?/' \
+  | grep -v -i 'example')
+if [ -n "$bad_names" ]; then
+  echo "✗ 拒绝提交：这些文件不该进仓库 ——" >&2
+  printf '  %s\n' $bad_names >&2
+  echo "  （确实要提交请用 git commit --no-verify，并想清楚后果）" >&2
+  exit 1
+fi
+
+# ② 内容里不许有真会话 / 真凭据（占位符 … / xxxx / *** 放过）
+for f in $staged; do
+  [ -f "$f" ] || continue
+  case "$f" in *.md|*.js|*.mjs|*.json|*.yml|*.yaml|*.ps1|*.txt|*.html) ;; *) continue ;; esac
+
+  if grep -Eq 'JSESSIONID=[0-9A-F]{32}' "$f"; then
+    echo "✗ 拒绝提交：$f 里疑似有真 JSESSIONID" >&2
+    exit 1
+  fi
+  if grep -Eq 'SOURCEID_TGC=eyJ[A-Za-z0-9_-]{20,}' "$f"; then
+    echo "✗ 拒绝提交：$f 里疑似有真 SSO TGC（JWT）" >&2
+    exit 1
+  fi
+  if grep -Eq 'token=[A-Za-z0-9]{25,}' "$f"; then
+    echo "✗ 拒绝提交：$f 里疑似有真业务 token" >&2
+    exit 1
+  fi
+  if grep -Eq '102502153|FPlanID"?\s*:\s*[0-9]{6,}' "$f"; then
+    echo "⚠️  提醒：$f 里出现了真实学号/计划号，确认是有意为之（不阻断）" >&2
+  fi
+done
+
+exit 0

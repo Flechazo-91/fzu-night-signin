@@ -1,0 +1,44 @@
+{
+  "name": "fzu-night-signin",
+  "version": "1.0.0",
+  "description": "福大晚点名签到：直接调服务端打卡接口，每晚 21:30 自动完成晚点名。不伪造 GPS、不 hook 高德、不跑 UI 自动化 —— 服务端只校验坐标是否落在围栏多边形内。",
+  "keywords": [
+    "fzu",
+    "福州大学",
+    "晚点名",
+    "打卡",
+    "attendance",
+    "automation",
+    "cli"
+  ],
+  "type": "module",
+  "bin": {
+    "fzu-signin": "./tools/fzu.mjs"
+  },
+  "main": "./lib/api.mjs",
+  "exports": {
+    ".": "./lib/api.mjs",
+    "./crypto": "./lib/crypto.mjs",
+    "./http": "./lib/http.mjs",
+    "./adb": "./lib/adb.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "tools",
+    "README.md",
+    "NOTICE.md",
+    "CHANGELOG.md",
+    "examples"
+  ],
+  "scripts": {
+    "selftest": "node tools/verify/selftest.mjs",
+    "doctor": "node tools/commands/doctor.mjs",
+    "sign": "node tools/commands/sign.mjs",
+    "status": "node tools/commands/status.mjs"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "license": "MIT"
+}

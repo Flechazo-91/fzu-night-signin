@@ -1,0 +1,22 @@
+{
+  "_说明": "复制到 ~/.fzu-night-signin/config.json 后按需改。这里不含任何凭据 —— cookie 由 fzu-signin cookies 从模拟器现拉。",
+
+  "lat": 26.056,
+  "lng": 119.196,
+  "address": "福建省福州市闽侯县上街镇学园路2号",
+
+  "emulator": {
+    "adb": "D:\\Program Files\\Netease\\MuMu\\nx_main\\adb.exe",
+    "manager": "D:\\Program Files\\Netease\\MuMu\\nx_main\\MuMuManager.exe",
+    "instance": "1",
+    "package": "cn.edu.fzu.fdxypa",
+    "autostart": true,
+    "waitSeconds": 120,
+    "cookieDb": "/data/data/cn.edu.fzu.fdxypa/app_webview/Default/Cookies"
+  },
+
+  "window": { "start": "21:00", "end": "23:59" },
+
+  "warmUp": true,
+  "warmUpSeconds": 45
+}

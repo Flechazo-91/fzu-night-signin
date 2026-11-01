@@ -1,0 +1,26 @@
+# ── 凭据与运行态（绝不能进仓库）──────────────────────────────
+cookiejar.json
+*.cookies.json
+Cookies.db
+my-cookies.json
+config.json
+
+# ── 运行产物 ────────────────────────────────────────────
+logs/
+*.log
+out/
+tmp/
+node_modules/
+
+# ── 打包进仓库的运行时（体积太大，按需自己放）──────────────
+bin/
+*.exe
+
+# ── 本机/编辑器 ─────────────────────────────────────────
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
