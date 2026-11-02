@@ -42,7 +42,14 @@ if (cookieProblem && device && cfg.warmUp && !args.has('dry')) {
   try {
     ensureRoot(cfg.emulator, device);
     warmUp(cfg.emulator, device, log);
-    r = await attempt('第 2 次尝试（会话刷新后）', false);
+    // 必须重新从设备拉 cookie：warmUp 会重建 SSO 会话，
+    // 用缓存里的旧 cookie 重试等于原地失败（v1.0.0 的 bug）
+    r = await attempt('第 2 次尝试（会话刷新后）', true);
+    if (!r.ok) {
+      log('重拉 cookie 后仍失败，等 20s 再试一次');
+      await new Promise((s) => setTimeout(s, 20000));
+      r = await attempt('第 3 次尝试', true);
+    }
   } catch (e) {
     log('唤醒失败: ' + e.message);
   }

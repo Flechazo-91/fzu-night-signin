@@ -5,6 +5,19 @@ Cookies.db
 my-cookies.json
 config.json
 
+# ── 抓包工具的产物：私钥、已签发的证书、流量（绝不能进仓库）──────
+mitm/*.key.pem
+mitm/*.crt.pem
+mitm/*.crt.der
+mitm/*.b64
+mitm/android-cacerts/
+mitm/captures/
+
+# ── 调查过程中的中间产物 ──────────────────────────────────
+dump/
+shots/
+*.jsonl
+
 # ── 运行产物 ────────────────────────────────────────────
 logs/
 *.log
