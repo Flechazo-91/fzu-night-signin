@@ -2,7 +2,7 @@
 
 import { parseArgs, createLogger, EXIT } from '../lib/cli.mjs';
 import { loadConfig } from '../../lib/config.mjs';
-import { findDevice, ensureRoot, pullCookieDb, readCookieDb } from '../../lib/adb.mjs';
+import { findDevice, ensureRoot, pullCookies } from '../../lib/adb.mjs';
 import { saveJar, JAR_PATH } from '../../lib/config.mjs';
 
 const args = parseArgs();
@@ -25,9 +25,7 @@ try {
   if (!ensureRoot(cfg.emulator, dev)) {
     log('! adb 不是 root，读取 App 私有目录可能失败');
   }
-
-  const db = pullCookieDb(cfg.emulator, dev);
-  const jar = readCookieDb(db);
+    const jar = pullCookies(cfg.emulator, dev);
   saveJar(jar);
 
   const hosts = Object.keys(jar);

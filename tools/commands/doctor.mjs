@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { parseArgs, EXIT } from '../lib/cli.mjs';
 import { loadConfig, loadJar, CONFIG_PATH, JAR_PATH } from '../../lib/config.mjs';
 import { CookieJar } from '../../lib/http.mjs';
-import { findDevice, ensureRoot, pullCookieDb, readCookieDb, hasSqlite } from '../../lib/adb.mjs';
+import { findDevice, ensureRoot, pullCookies, hasSqlite } from '../../lib/adb.mjs';
 import { fetchToken, fetchInit, fetchCheck } from '../../lib/api.mjs';
 import { describeFence, checkWindow } from '../../lib/state.mjs';
 
@@ -50,8 +50,7 @@ if (device) {
   const rooted = ensureRoot(cfg.emulator, device);
   rooted ? ok('adb root') : warn('adb 非 root，可能读不到 App 私有目录');
   try {
-    const db = pullCookieDb(cfg.emulator, device);
-    const jar = readCookieDb(db);
+    const jar = pullCookies(cfg.emulator, device);
     ok('cookie: ' + (Object.keys(jar).join(', ') || '（空）'));
   } catch (e) {
     bad('cookie 同步失败: ' + e.message);

@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import { loadConfig, loadJar, saveJar, JAR_PATH } from '../../lib/config.mjs';
 import { CookieJar } from '../../lib/http.mjs';
-import { findDevice, ensureRoot, pullCookieDb, readCookieDb } from '../../lib/adb.mjs';
+import { findDevice, ensureRoot, pullCookies } from '../../lib/adb.mjs';
 
 /**
  * @param {object} opts
@@ -38,8 +38,7 @@ export function prepareJar({ sync = true, jarFile = null, log = () => {} } = {})
       const rooted = ensureRoot(cfg.emulator, device);
       if (!rooted) log('! adb 不是 root，可能读不到 App 私有目录');
       try {
-        const db = pullCookieDb(cfg.emulator, device);
-        const jar = readCookieDb(db);
+    const jar = pullCookies(cfg.emulator, device);
         saveJar(jar);
         log('cookie 已同步: ' + Object.keys(jar).join(', '));
         return { jar: new CookieJar(jar), source: 'device', device };
